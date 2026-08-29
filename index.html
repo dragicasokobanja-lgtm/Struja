@@ -3,43 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Struje - EPS Sat</title>
-    <!-- Chart.js biblioteka za grafikone -->
+    <title>Evidencija Struje — Podbrojila & Glavno Brojilo</title>
+    <!-- Chart.js za grafikone -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: #f0f2f5; margin: 0; padding: 10px; color: #333; }
-        .card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        body { background-color: #f4f5f7; margin: 0; padding: 12px; color: #333; }
+        .main-title { text-align: center; color: #1e293b; font-size: 22px; font-weight: 800; margin: 15px 0 20px 0; line-height: 1.3; }
+        
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border-top: 5px solid #cbd5e1; }
+        .card-marija { border-top-color: #e83e8c; }
+        .card-aleksa { border-top-color: #28a745; }
+        .card-glavno { border-top-color: #6f42c1; }
+        .card-grafikon { border-top-color: #007bff; }
+
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-title { font-size: 20px; font-weight: 700; color: #2d3748; margin: 0; }
-        .badge { background: #edf2f7; color: #4a5568; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
-        .badge-marija { background: #eef2ff; color: #4f46e5; }
-        .badge-aleksa { background: #f0fdf4; color: #166534; }
-        label { display: block; font-size: 11px; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .card-title { font-size: 20px; font-weight: 700; color: #1e293b; margin: 0; }
+        .badge { background: #f1f5f9; color: #64748b; padding: 5px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+        
+        label { display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
         input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 16px; margin-bottom: 12px; background: #f8fafc; }
-        input:focus { outline: none; border-color: #6b46c1; background: white; }
+        input:focus { outline: none; border-color: #e83e8c; background: white; }
+        
         .row-2 { display: flex; gap: 10px; }
         .row-2 > div { flex: 1; }
-        .btn-purple { width: 100%; padding: 14px; background: #6b46c1; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 5px; margin-bottom: 15px; }
-        .btn-purple:active { background: #553c9a; }
-        .btn-blue { background: #4f46e5; }
-        .btn-green { background: #166534; }
+        
+        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 5px; margin-bottom: 15px; transition: opacity 0.2s; }
+        .btn:active { opacity: 0.85; }
+        .btn-marija { background: #e83e8c; }
+        .btn-aleksa { background: #28a745; }
+        .btn-glavno { background: #6f42c1; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px 4px; text-align: center; border-bottom: 1px solid #edf2f7; font-size: 14px; }
-        th { color: #718096; font-size: 12px; }
-        .btn-del { background: #e53e3e; color: white; border: none; border-radius: 6px; width: 26px; height: 26px; font-weight: bold; cursor: pointer; }
-        .rezija-box { border: 1.5px dashed #6b46c1; background: #faf5ff; border-radius: 12px; padding: 12px; margin-top: 15px; }
+        th, td { padding: 10px 4px; text-align: center; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        th { color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .btn-del { background: #dc3545; color: white; border: none; border-radius: 6px; width: 26px; height: 26px; font-weight: bold; cursor: pointer; }
+
+        .rezija-box { border: 1.5px dashed #6f42c1; background: #f3f0ff; border-radius: 12px; padding: 12px; margin-top: 15px; }
         .rezija-title { color: #553c9a; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
         .rezija-text { font-size: 13px; color: #4a5568; margin: 2px 0; }
-        .rezija-text strong { color: #2f855a; }
-        .chart-container { width: 100%; height: 230px; margin-top: 10px; }
+        .rezija-text strong { color: #28a745; }
+
+        .chart-container { width: 100%; height: 240px; margin-top: 10px; }
         .chart-pita-box { max-width: 280px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-    <!-- 1. GLAVNO BROJILO -->
-    <div class="card">
+    <div class="main-title">Evidencija Struje — Podbrojila & Glavno Brojilo</div>
+
+    <!-- 1. MARIJA -->
+    <div class="card card-marija">
+        <div class="card-header">
+            <h2 class="card-title">Marija</h2>
+            <span class="badge">Podbrojilo 1</span>
+        </div>
+
+        <label>Datum očitavanja:</label>
+        <input type="date" id="datumMarija">
+
+        <label>VIŠA TARIFA (VT)</label>
+        <div class="row-2">
+            <div>
+                <label>Novo stanje (kWh):</label>
+                <input type="number" id="vtMarija" placeholder="kWh">
+            </div>
+            <div>
+                <label>Cena (RSD):</label>
+                <input type="number" id="cenaVtMarija" value="15.35" step="0.01">
+            </div>
+        </div>
+
+        <label>NIŽA TARIFA (NT)</label>
+        <div class="row-2">
+            <div>
+                <label>Novo stanje (kWh):</label>
+                <input type="number" id="ntMarija" placeholder="kWh">
+            </div>
+            <div>
+                <label>Cena (RSD):</label>
+                <input type="number" id="cenaNtMarija" value="3.84" step="0.01">
+            </div>
+        </div>
+
+        <button class="btn btn-marija" onclick="sacuvajMariju()">Sačuvaj za Mariju</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>VT / NT</th>
+                    <th>Iznos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabelaMarija"></tbody>
+        </table>
+    </div>
+
+    <!-- 2. ALEKSA -->
+    <div class="card card-aleksa">
+        <div class="card-header">
+            <h2 class="card-title">Aleksa</h2>
+            <span class="badge">Podbrojilo 2</span>
+        </div>
+
+        <label>Datum očitavanja:</label>
+        <input type="date" id="datumAleksa">
+
+        <label>VIŠA TARIFA (VT)</label>
+        <div class="row-2">
+            <div>
+                <label>Novo stanje (kWh):</label>
+                <input type="number" id="vtAleksa" placeholder="kWh">
+            </div>
+            <div>
+                <label>Cena (RSD):</label>
+                <input type="number" id="cenaVtAleksa" value="15.35" step="0.01">
+            </div>
+        </div>
+
+        <label>NIŽA TARIFA (NT)</label>
+        <div class="row-2">
+            <div>
+                <label>Novo stanje (kWh):</label>
+                <input type="number" id="ntAleksa" placeholder="kWh">
+            </div>
+            <div>
+                <label>Cena (RSD):</label>
+                <input type="number" id="cenaNtAleksa" value="3.84" step="0.01">
+            </div>
+        </div>
+
+        <button class="btn btn-aleksa" onclick="sacuvajAleksu()">Sačuvaj za Aleksu</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>VT / NT</th>
+                    <th>Iznos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabelaAleksa"></tbody>
+        </table>
+    </div>
+
+    <!-- 3. GLAVNO BROJILO -->
+    <div class="card card-glavno">
         <div class="card-header">
             <h2 class="card-title">Glavno Brojilo</h2>
             <span class="badge">EPS Sat</span>
@@ -56,7 +168,7 @@
             </div>
             <div>
                 <label>Cena (RSD):</label>
-                <input type="number" id="cenaVt" value="15.35" step="0.01">
+                <input type="number" id="cenaVtGlavno" value="15.35" step="0.01">
             </div>
         </div>
 
@@ -68,11 +180,11 @@
             </div>
             <div>
                 <label>Cena (RSD):</label>
-                <input type="number" id="cenaNt" value="3.84" step="0.01">
+                <input type="number" id="cenaNtGlavno" value="3.84" step="0.01">
             </div>
         </div>
 
-        <button class="btn-purple" onclick="sacuvajGlavno()">Sačuvaj Glavno Brojilo</button>
+        <button class="btn btn-glavno" onclick="sacuvajGlavno()">Sačuvaj Glavno Brojilo</button>
 
         <table>
             <thead>
@@ -93,80 +205,18 @@
         </div>
     </div>
 
-    <!-- 2. BROJILO MARIJA -->
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Marija</h2>
-            <span class="badge badge-marija">Brojilo 1</span>
-        </div>
-
-        <label>Datum očitavanja:</label>
-        <input type="date" id="datumMarija">
-
-        <div class="row-2">
-            <div>
-                <label>VT STANJE (kWh):</label>
-                <input type="number" id="vtMarija" placeholder="kWh">
-            </div>
-            <div>
-                <label>NT STANJE (kWh):</label>
-                <input type="number" id="ntMarija" placeholder="kWh">
-            </div>
-        </div>
-
-        <button class="btn-purple btn-blue" onclick="sacuvajMariju()">Sačuvaj Marija Brojilo</button>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Datum</th>
-                    <th>VT / NT</th>
-                    <th>Iznos</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="tabelaMarija"></tbody>
-        </table>
-    </div>
-
-    <!-- 3. BROJILO ALEKSA -->
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Aleksa</h2>
-            <span class="badge badge-aleksa">Brojilo 2</span>
-        </div>
-
-        <label>Datum očitavanja:</label>
-        <input type="date" id="datumAleksa">
-
-        <div class="row-2">
-            <div>
-                <label>VT STANJE (kWh):</label>
-                <input type="number" id="vtAleksa" placeholder="kWh">
-            </div>
-            <div>
-                <label>NT STANJE (kWh):</label>
-                <input type="number" id="ntAleksa" placeholder="kWh">
-            </div>
-        </div>
-
-        <button class="btn-purple btn-green" onclick="sacuvajAleksu()">Sačuvaj Aleksa Brojilo</button>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Datum</th>
-                    <th>VT / NT</th>
-                    <th>Iznos</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="tabelaAleksa"></tbody>
-        </table>
-    </div>
-
     <!-- 4. GRAFIKONI -->
-    <div class="card">
+    <div class="card card-grafikon">
+        <div class="card-header">
+            <h2 class="card-title">Učešće u potrošnji</h2>
+            <span class="badge">Pita</span>
+        </div>
+        <div class="chart-container chart-pita-box">
+            <canvas id="grafikonPita"></canvas>
+        </div>
+    </div>
+
+    <div class="card card-grafikon">
         <div class="card-header">
             <h2 class="card-title">Poređenje potrošnje</h2>
             <span class="badge">Stubičasti</span>
@@ -176,71 +226,41 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Procenat učešća</h2>
-            <span class="badge">Pita</span>
-        </div>
-        <div class="chart-container chart-pita-box">
-            <canvas id="grafikonPita"></canvas>
-        </div>
-    </div>
-
     <script>
-        // Postavi današnji datum
-        document.getElementById('datumGlavno').valueAsDate = new Date();
+        // Postavljanje današnjeg datuma
         document.getElementById('datumMarija').valueAsDate = new Date();
         document.getElementById('datumAleksa').valueAsDate = new Date();
+        document.getElementById('datumGlavno').valueAsDate = new Date();
 
-        let podaciGlavno = JSON.parse(localStorage.getItem('podaciGlavno')) || [];
         let podaciMarija = JSON.parse(localStorage.getItem('podaciMarija')) || [];
         let podaciAleksa = JSON.parse(localStorage.getItem('podaciAleksa')) || [];
+        let podaciGlavno = JSON.parse(localStorage.getItem('podaciGlavno')) || [];
 
-        let chartStub = null;
         let chartPita = null;
+        let chartStub = null;
 
         function osveziSve() {
-            localStorage.setItem('podaciGlavno', JSON.stringify(podaciGlavno));
             localStorage.setItem('podaciMarija', JSON.stringify(podaciMarija));
             localStorage.setItem('podaciAleksa', JSON.stringify(podaciAleksa));
+            localStorage.setItem('podaciGlavno', JSON.stringify(podaciGlavno));
 
-            prikaziTabelu('tabelaGlavno', podaciGlavno, 'obrisiGlavno');
             prikaziTabelu('tabelaMarija', podaciMarija, 'obrisiMariju');
             prikaziTabelu('tabelaAleksa', podaciAleksa, 'obrisiAleksu');
+            prikaziTabelu('tabelaGlavno', podaciGlavno, 'obrisiGlavno');
 
             izracunajReziju();
             iscrtajGrafikone();
-        }
-
-        function izracunajIznos(vt, nt) {
-            const cenaVt = parseFloat(document.getElementById('cenaVt').value) || 15.35;
-            const cenaNt = parseFloat(document.getElementById('cenaNt').value) || 3.84;
-            return (vt * cenaVt) + (nt * cenaNt);
-        }
-
-        function sacuvajGlavno() {
-            const datum = document.getElementById('datumGlavno').value;
-            const vt = parseFloat(document.getElementById('vtGlavno').value) || 0;
-            const nt = parseFloat(document.getElementById('ntGlavno').value) || 0;
-
-            if(!datum) { alert('Unesite datum'); return; }
-
-            const iznos = izracunajIznos(vt, nt);
-            podaciGlavno.unshift({ datum, vt, nt, iznos });
-            
-            document.getElementById('vtGlavno').value = '';
-            document.getElementById('ntGlavno').value = '';
-            osveziSve();
         }
 
         function sacuvajMariju() {
             const datum = document.getElementById('datumMarija').value;
             const vt = parseFloat(document.getElementById('vtMarija').value) || 0;
             const nt = parseFloat(document.getElementById('ntMarija').value) || 0;
+            const cVt = parseFloat(document.getElementById('cenaVtMarija').value) || 15.35;
+            const cNt = parseFloat(document.getElementById('cenaNtMarija').value) || 3.84;
 
             if(!datum) { alert('Unesite datum'); return; }
-
-            const iznos = izracunajIznos(vt, nt);
+            const iznos = (vt * cVt) + (nt * cNt);
             podaciMarija.unshift({ datum, vt, nt, iznos });
 
             document.getElementById('vtMarija').value = '';
@@ -252,10 +272,11 @@
             const datum = document.getElementById('datumAleksa').value;
             const vt = parseFloat(document.getElementById('vtAleksa').value) || 0;
             const nt = parseFloat(document.getElementById('ntAleksa').value) || 0;
+            const cVt = parseFloat(document.getElementById('cenaVtAleksa').value) || 15.35;
+            const cNt = parseFloat(document.getElementById('cenaNtAleksa').value) || 3.84;
 
             if(!datum) { alert('Unesite datum'); return; }
-
-            const iznos = izracunajIznos(vt, nt);
+            const iznos = (vt * cVt) + (nt * cNt);
             podaciAleksa.unshift({ datum, vt, nt, iznos });
 
             document.getElementById('vtAleksa').value = '';
@@ -263,9 +284,25 @@
             osveziSve();
         }
 
-        function obrisiGlavno(index) { podaciGlavno.splice(index, 1); osveziSve(); }
+        function sacuvajGlavno() {
+            const datum = document.getElementById('datumGlavno').value;
+            const vt = parseFloat(document.getElementById('vtGlavno').value) || 0;
+            const nt = parseFloat(document.getElementById('ntGlavno').value) || 0;
+            const cVt = parseFloat(document.getElementById('cenaVtGlavno').value) || 15.35;
+            const cNt = parseFloat(document.getElementById('cenaNtGlavno').value) || 3.84;
+
+            if(!datum) { alert('Unesite datum'); return; }
+            const iznos = (vt * cVt) + (nt * cNt);
+            podaciGlavno.unshift({ datum, vt, nt, iznos });
+
+            document.getElementById('vtGlavno').value = '';
+            document.getElementById('ntGlavno').value = '';
+            osveziSve();
+        }
+
         function obrisiMariju(index) { podaciMarija.splice(index, 1); osveziSve(); }
         function obrisiAleksu(index) { podaciAleksa.splice(index, 1); osveziSve(); }
+        function obrisiGlavno(index) { podaciGlavno.splice(index, 1); osveziSve(); }
 
         function prikaziTabelu(elementId, podaci, funkcijaBrisanja) {
             const tbody = document.getElementById(elementId);
@@ -300,36 +337,8 @@
         }
 
         function iscrtajGrafikone() {
-            // 1. Stubičasti grafikon
-            const ctxStub = document.getElementById('grafikonStub').getContext('2d');
-            const datumi = podaciGlavno.map(p => p.datum).reverse();
-            
-            const iznosiGlavno = podaciGlavno.map(p => p.iznos).reverse();
-            const iznosiMarija = podaciMarija.map(p => p.iznos).reverse();
-            const iznosiAleksa = podaciAleksa.map(p => p.iznos).reverse();
-
-            if (chartStub) chartStub.destroy();
-            chartStub = new Chart(ctxStub, {
-                type: 'bar',
-                data: {
-                    labels: datumi.length > 0 ? datumi : ['Nema podataka'],
-                    datasets: [
-                        { label: 'Glavno', data: iznosiGlavno, backgroundColor: '#6b46c1' },
-                        { label: 'Marija', data: iznosiMarija, backgroundColor: '#4f46e5' },
-                        { label: 'Aleksa', data: iznosiAleksa, backgroundColor: '#166534' }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            // 2. Pita grafikon (Poslednje očitavanje)
+            // 1. Pita Grafikon
             const ctxPita = document.getElementById('grafikonPita').getContext('2d');
-            
             let valMarija = podaciMarija.length > 0 ? podaciMarija[0].iznos : 0;
             let valAleksa = podaciAleksa.length > 0 ? podaciAleksa[0].iznos : 0;
             let valGlavno = podaciGlavno.length > 0 ? podaciGlavno[0].iznos : 0;
@@ -343,7 +352,7 @@
                     labels: ['Marija', 'Aleksa', 'Zajedničko / Režija'],
                     datasets: [{
                         data: [valMarija, valAleksa, valRezija],
-                        backgroundColor: ['#4f46e5', '#166534', '#6b46c1']
+                        backgroundColor: ['#e83e8c', '#28a745', '#6f42c1']
                     }]
                 },
                 options: {
@@ -352,9 +361,36 @@
                     plugins: { legend: { position: 'bottom' } }
                 }
             });
+
+            // 2. Stubičasti Grafikon
+            const ctxStub = document.getElementById('grafikonStub').getContext('2d');
+            const datumi = podaciGlavno.map(p => p.datum).reverse();
+            
+            const iznosiGlavno = podaciGlavno.map(p => p.iznos).reverse();
+            const iznosiMarija = podaciMarija.map(p => p.iznos).reverse();
+            const iznosiAleksa = podaciAleksa.map(p => p.iznos).reverse();
+
+            if (chartStub) chartStub.destroy();
+            chartStub = new Chart(ctxStub, {
+                type: 'bar',
+                data: {
+                    labels: datumi.length > 0 ? datumi : ['Nema podataka'],
+                    datasets: [
+                        { label: 'Glavno', data: iznosiGlavno, backgroundColor: '#6f42c1' },
+                        { label: 'Marija', data: iznosiMarija, backgroundColor: '#e83e8c' },
+                        { label: 'Aleksa', data: iznosiAleksa, backgroundColor: '#28a745' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
         }
 
-        // Inicijalno osvežavanje
+        // Inicijalno učitavanje pri otvaranju
         osveziSve();
     </script>
 </body>
