@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Struje - Grafikoni</title>
+    <title>Kalkulator Struje sa Grafikonom</title>
     <!-- Chart.js biblioteka za grafikone -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: sans-serif; padding: 15px; background: #f4f4f9; max-width: 600px; margin: auto; }
-        h2, h3 { text-align: center; color: #333; }
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        input, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background: #28a745; color: white; font-weight: bold; border: none; cursor: pointer; }
-        .btn-danger { background: #dc3545; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background: #f0f0f0; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 12px; background: #eef2f5; max-width: 650px; margin: auto; color: #333; }
+        h2, h3 { text-align: center; color: #1a365d; margin-top: 5px; }
+        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
+        label { font-size: 0.9em; font-weight: bold; color: #4a5568; display: block; margin-top: 8px; }
+        input, select, button { width: 100%; padding: 10px; margin: 4px 0 10px 0; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 14px; }
+        input:focus, select:focus { outline: none; border-color: #3182ce; box-shadow: 0 0 0 2px rgba(49,130,206,0.2); }
+        button { background: #3182ce; color: white; font-weight: bold; border: none; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #2b6cb0; }
+        .btn-danger { background: #e53e3e; }
+        .btn-danger:hover { background: #c53030; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
+        th { background: #f7fafc; color: #2d3748; }
         .chart-box { width: 100%; margin: 15px 0; }
-        .chart-pita { max-width: 300px; margin: 0 auto; }
+        .chart-pita { max-width: 320px; margin: 0 auto; }
+        .total-box { background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; color: #2b6cb0; font-size: 1.1em; }
     </style>
 </head>
 <body>
@@ -25,15 +32,30 @@
     <h2>Kalkulator Struje</h2>
 
     <div class="card">
-        <h3>Unos novog računa</h3>
-        <input type="text" id="korisnik" placeholder="Ime / Član (npr. Sprat 1)">
-        <input type="number" id="potrosnja" placeholder="Potrošeno kWh ili Iznos (RSD)">
-        <button onclick="dodajStavku()">Dodaj u račun</button>
+        <h3>Unos novog računa / Člana</h3>
+        <label for="korisnik">Ime / Član (npr. Sprat 1, Stan 2)</label>
+        <input type="text" id="korisnik" placeholder="Unesite ime ili prostoriju">
+
+        <div class="grid-2">
+            <div>
+                <label for="potrosnjaVT">Viša tarifa (VT - kWh)</label>
+                <input type="number" id="potrosnjaVT" placeholder="0" value="0">
+            </div>
+            <div>
+                <label for="potrosnjaMT">Niža tarifa (MT - kWh)</label>
+                <input type="number" id="potrosnjaMT" placeholder="0" value="0">
+            </div>
+        </div>
+
+        <label for="iznosRSD">Ili unesite direktan iznos (RSD)</label>
+        <input type="number" id="iznosRSD" placeholder="Ako znate tačan iznos u dinarima">
+
+        <button onclick="dodajStavku()">Dodaj u obračun</button>
     </div>
 
     <!-- Stubičasti grafikon -->
     <div class="card">
-        <h3>Poređenje potrošnje (Stubičasti)</h3>
+        <h3>Poređenje potrošnje (kWh / RSD)</h3>
         <div class="chart-box">
             <canvas id="stubicastiGrafikon"></canvas>
         </div>
@@ -41,28 +63,36 @@
 
     <!-- Pita grafikon -->
     <div class="card">
-        <h3>Procenat učešća (Pita)</h3>
+        <h3>Procenat učešća u računu</h3>
         <div class="chart-box chart-pita">
             <canvas id="pitaGrafikon"></canvas>
         </div>
     </div>
 
     <div class="card">
-        <h3>Pregled unetih podataka</h3>
+        <h3>Pregled unetih stavki</h3>
         <table>
             <thead>
                 <tr>
                     <th>Član</th>
-                    <th>Iznos / kWh</th>
+                    <th>VT (kWh)</th>
+                    <th>MT (kWh)</th>
+                    <th>Iznos (RSD)</th>
                     <th>Akcija</th>
                 </tr>
             </thead>
             <tbody id="tabela-podaci"></tbody>
         </table>
+
+        <div class="total-box" style="margin-top: 15px;" id="ukupno-prikaz">
+            Ukupno za uplatu: 0 RSD
+        </div>
+
         <button onclick="obrisiSve()" class="btn-danger" style="margin-top: 15px;">Obriši sve podatke</button>
     </div>
 
     <script>
+        // Učitavanje iz lokalne memorije
         let podaci = JSON.parse(localStorage.getItem('podaciStruja')) || [];
         let grafikonPita = null;
         let grafikonStub = null;
@@ -75,16 +105,33 @@
 
         function dodajStavku() {
             const korisnik = document.getElementById('korisnik').value.trim();
-            const potrosnja = parseFloat(document.getElementById('potrosnja').value);
+            const vt = parseFloat(document.getElementById('potrosnjaVT').value) || 0;
+            const mt = parseFloat(document.getElementById('potrosnjaMT').value) || 0;
+            let rsd = parseFloat(document.getElementById('iznosRSD').value) || 0;
 
-            if (!korisnik || isNaN(potrosnja) || potrosnja <= 0) {
-                alert('Molimo unesite ispravno ime i potrošnju.');
+            if (!korisnik) {
+                alert('Molimo unesite ime ili naziv člana.');
                 return;
             }
 
-            podaci.push({ korisnik, potrosnja });
+            if (vt === 0 && mt === 0 && rsd === 0) {
+                alert('Unesite potrošnju u kWh ili iznos u dinarima.');
+                return;
+            }
+
+            // Ako iznos u RSD nije ručno unet, izračunaj okvirno po kWh (prosečna cena sa taksama ~10 RSD/kWh)
+            if (rsd === 0 && (vt > 0 || mt > 0)) {
+                rsd = Math.round((vt * 12) + (mt * 4)); // Prosta procena VT/MT
+            }
+
+            podaci.push({ korisnik, vt, mt, rsd });
+            
+            // Resetuj polja
             document.getElementById('korisnik').value = '';
-            document.getElementById('potrosnja').value = '';
+            document.getElementById('potrosnjaVT').value = '0';
+            document.getElementById('potrosnjaMT').value = '0';
+            document.getElementById('iznosRSD').value = '';
+
             sacuvajIosvezi();
         }
 
@@ -94,7 +141,7 @@
         }
 
         function obrisiSve() {
-            if (confirm('Da li ste sigurni da želite da obrišete sve podatke?')) {
+            if (confirm('Da li ste sigurni da želite da obrišete sve unete podatke?')) {
                 podaci = [];
                 sacuvajIosvezi();
             }
@@ -103,33 +150,40 @@
         function prikaziTabelu() {
             const tbody = document.getElementById('tabela-podaci');
             tbody.innerHTML = '';
+            let ukupnoRsd = 0;
+
             podaci.forEach((item, index) => {
+                ukupnoRsd += item.rsd;
                 tbody.innerHTML += `
                     <tr>
-                        <td>${item.korisnik}</td>
-                        <td>${item.potrosnja}</td>
-                        <td><button onclick="obrisiStavku(${index})" class="btn-danger" style="padding: 5px;">X</button></td>
+                        <td><b>${item.korisnik}</b></td>
+                        <td>${item.vt}</td>
+                        <td>${item.mt}</td>
+                        <td>${item.rsd.toLocaleString('sr-RS')} RSD</td>
+                        <td><button onclick="obrisiStavku(${index})" class="btn-danger" style="padding: 4px 8px; margin:0; width:auto;">X</button></td>
                     </tr>
                 `;
             });
+
+            document.getElementById('ukupno-prikaz').innerText = 'Ukupno za uplatu: ' + ukupnoRsd.toLocaleString('sr-RS') + ' RSD';
         }
 
         function nacrtajGrafikone() {
             const imena = [];
-            const vrednosti = [];
-            
-            // Grupisanje potrošnje
+            const iznosi = [];
+
+            // Grupisanje po članovima
             podaci.forEach(item => {
-                const postojeciIndex = imena.indexOf(item.korisnik);
-                if (postojeciIndex > -1) {
-                    vrednosti[postojeciIndex] += item.potrosnja;
+                const index = imena.indexOf(item.korisnik);
+                if (index > -1) {
+                    iznosi[index] += item.rsd;
                 } else {
                     imena.push(item.korisnik);
-                    vrednosti.push(item.potrosnja);
+                    iznosi.push(item.rsd);
                 }
             });
 
-            const boje = ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+            const boje = ['#3182ce', '#e53e3e', '#dd6b20', '#38a169', '#805ad5', '#d69e2e', '#319795'];
 
             // 1. Stubičasti Grafikon
             const ctxStub = document.getElementById('stubicastiGrafikon').getContext('2d');
@@ -139,8 +193,8 @@
                 data: {
                     labels: imena,
                     datasets: [{
-                        label: 'Potrošnja (kWh / RSD)',
-                        data: vrednosti,
+                        label: 'Iznos (RSD)',
+                        data: iznosi,
                         backgroundColor: boje.slice(0, imena.length)
                     }]
                 },
@@ -159,7 +213,7 @@
                 data: {
                     labels: imena,
                     datasets: [{
-                        data: vrednosti,
+                        data: iznosi,
                         backgroundColor: boje.slice(0, imena.length)
                     }]
                 },
@@ -170,7 +224,7 @@
             });
         }
 
-        // Inicijalno učitavanje
+        // Inicijalno učitavanje pri otvaranju
         prikaziTabelu();
         nacrtajGrafikone();
     </script>
