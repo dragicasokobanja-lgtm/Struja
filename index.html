@@ -13,6 +13,8 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .card-title { font-size: 20px; font-weight: 700; color: #2d3748; margin: 0; }
         .badge { background: #edf2f7; color: #4a5568; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+        .badge-marija { background: #eef2ff; color: #4f46e5; }
+        .badge-aleksa { background: #f0fdf4; color: #166534; }
         label { display: block; font-size: 11px; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
         input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 16px; margin-bottom: 12px; background: #f8fafc; }
         input:focus { outline: none; border-color: #6b46c1; background: white; }
@@ -20,6 +22,8 @@
         .row-2 > div { flex: 1; }
         .btn-purple { width: 100%; padding: 14px; background: #6b46c1; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 5px; margin-bottom: 15px; }
         .btn-purple:active { background: #553c9a; }
+        .btn-blue { background: #4f46e5; }
+        .btn-green { background: #166534; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 10px 4px; text-align: center; border-bottom: 1px solid #edf2f7; font-size: 14px; }
         th { color: #718096; font-size: 12px; }
@@ -28,12 +32,13 @@
         .rezija-title { color: #553c9a; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
         .rezija-text { font-size: 13px; color: #4a5568; margin: 2px 0; }
         .rezija-text strong { color: #2f855a; }
-        .chart-container { width: 100%; height: 220px; margin-top: 10px; }
+        .chart-container { width: 100%; height: 230px; margin-top: 10px; }
+        .chart-pita-box { max-width: 280px; margin: 0 auto; }
     </style>
 </head>
 <body>
 
-    <!-- Glavno Brojilo -->
+    <!-- 1. GLAVNO BROJILO -->
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">Glavno Brojilo</h2>
@@ -88,28 +93,28 @@
         </div>
     </div>
 
-    <!-- Pomoćno Brojilo -->
+    <!-- 2. BROJILO MARIJA -->
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">Pomoćno Brojilo</h2>
-            <span class="badge">Lokalno</span>
+            <h2 class="card-title">Marija</h2>
+            <span class="badge badge-marija">Brojilo 1</span>
         </div>
 
         <label>Datum očitavanja:</label>
-        <input type="date" id="datumPomocno">
+        <input type="date" id="datumMarija">
 
         <div class="row-2">
             <div>
                 <label>VT STANJE (kWh):</label>
-                <input type="number" id="vtPomocno" placeholder="kWh">
+                <input type="number" id="vtMarija" placeholder="kWh">
             </div>
             <div>
                 <label>NT STANJE (kWh):</label>
-                <input type="number" id="ntPomocno" placeholder="kWh">
+                <input type="number" id="ntMarija" placeholder="kWh">
             </div>
         </div>
 
-        <button class="btn-purple" onclick="sacuvajPomocno()">Sačuvaj Pomoćno Brojilo</button>
+        <button class="btn-purple btn-blue" onclick="sacuvajMariju()">Sačuvaj Marija Brojilo</button>
 
         <table>
             <thead>
@@ -120,49 +125,107 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="tabelaPomocno"></tbody>
+            <tbody id="tabelaMarija"></tbody>
         </table>
     </div>
 
-    <!-- DODATAK: Grafikon na samom dnu -->
+    <!-- 3. BROJILO ALEKSA -->
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">Grafikon potrošnje</h2>
-            <span class="badge">Pregled</span>
+            <h2 class="card-title">Aleksa</h2>
+            <span class="badge badge-aleksa">Brojilo 2</span>
+        </div>
+
+        <label>Datum očitavanja:</label>
+        <input type="date" id="datumAleksa">
+
+        <div class="row-2">
+            <div>
+                <label>VT STANJE (kWh):</label>
+                <input type="number" id="vtAleksa" placeholder="kWh">
+            </div>
+            <div>
+                <label>NT STANJE (kWh):</label>
+                <input type="number" id="ntAleksa" placeholder="kWh">
+            </div>
+        </div>
+
+        <button class="btn-purple btn-green" onclick="sacuvajAleksu()">Sačuvaj Aleksa Brojilo</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>VT / NT</th>
+                    <th>Iznos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabelaAleksa"></tbody>
+        </table>
+    </div>
+
+    <!-- 4. GRAFIKONI -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Poređenje potrošnje</h2>
+            <span class="badge">Stubičasti</span>
         </div>
         <div class="chart-container">
-            <canvas id="grafikonPoredjenja"></canvas>
+            <canvas id="grafikonStub"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Procenat učešća</h2>
+            <span class="badge">Pita</span>
+        </div>
+        <div class="chart-container chart-pita-box">
+            <canvas id="grafikonPita"></canvas>
         </div>
     </div>
 
     <script>
-        // Postavi današnji datum po defaultu
+        // Postavi današnji datum
         document.getElementById('datumGlavno').valueAsDate = new Date();
-        document.getElementById('datumPomocno').valueAsDate = new Date();
+        document.getElementById('datumMarija').valueAsDate = new Date();
+        document.getElementById('datumAleksa').valueAsDate = new Date();
 
         let podaciGlavno = JSON.parse(localStorage.getItem('podaciGlavno')) || [];
-        let podaciPomocno = JSON.parse(localStorage.getItem('podaciPomocno')) || [];
-        let mojGrafikon = null;
+        let podaciMarija = JSON.parse(localStorage.getItem('podaciMarija')) || [];
+        let podaciAleksa = JSON.parse(localStorage.getItem('podaciAleksa')) || [];
+
+        let chartStub = null;
+        let chartPita = null;
 
         function osveziSve() {
             localStorage.setItem('podaciGlavno', JSON.stringify(podaciGlavno));
-            localStorage.setItem('podaciPomocno', JSON.stringify(podaciPomocno));
-            prikaziGlavno();
-            prikaziPomocno();
+            localStorage.setItem('podaciMarija', JSON.stringify(podaciMarija));
+            localStorage.setItem('podaciAleksa', JSON.stringify(podaciAleksa));
+
+            prikaziTabelu('tabelaGlavno', podaciGlavno, 'obrisiGlavno');
+            prikaziTabelu('tabelaMarija', podaciMarija, 'obrisiMariju');
+            prikaziTabelu('tabelaAleksa', podaciAleksa, 'obrisiAleksu');
+
             izracunajReziju();
-            iscrtajGrafikon();
+            iscrtajGrafikone();
+        }
+
+        function izracunajIznos(vt, nt) {
+            const cenaVt = parseFloat(document.getElementById('cenaVt').value) || 15.35;
+            const cenaNt = parseFloat(document.getElementById('cenaNt').value) || 3.84;
+            return (vt * cenaVt) + (nt * cenaNt);
         }
 
         function sacuvajGlavno() {
             const datum = document.getElementById('datumGlavno').value;
             const vt = parseFloat(document.getElementById('vtGlavno').value) || 0;
             const nt = parseFloat(document.getElementById('ntGlavno').value) || 0;
-            const cenaVt = parseFloat(document.getElementById('cenaVt').value) || 15.35;
-            const cenaNt = parseFloat(document.getElementById('cenaNt').value) || 3.84;
 
             if(!datum) { alert('Unesite datum'); return; }
 
-            const iznos = (vt * cenaVt) + (nt * cenaNt);
+            const iznos = izracunajIznos(vt, nt);
             podaciGlavno.unshift({ datum, vt, nt, iznos });
             
             document.getElementById('vtGlavno').value = '';
@@ -170,119 +233,128 @@
             osveziSve();
         }
 
-        function sacuvajPomocno() {
-            const datum = document.getElementById('datumPomocno').value;
-            const vt = parseFloat(document.getElementById('vtPomocno').value) || 0;
-            const nt = parseFloat(document.getElementById('ntPomocno').value) || 0;
-            const cenaVt = parseFloat(document.getElementById('cenaVt').value) || 15.35;
-            const cenaNt = parseFloat(document.getElementById('cenaNt').value) || 3.84;
+        function sacuvajMariju() {
+            const datum = document.getElementById('datumMarija').value;
+            const vt = parseFloat(document.getElementById('vtMarija').value) || 0;
+            const nt = parseFloat(document.getElementById('ntMarija').value) || 0;
 
             if(!datum) { alert('Unesite datum'); return; }
 
-            const iznos = (vt * cenaVt) + (nt * cenaNt);
-            podaciPomocno.unshift({ datum, vt, nt, iznos });
+            const iznos = izracunajIznos(vt, nt);
+            podaciMarija.unshift({ datum, vt, nt, iznos });
 
-            document.getElementById('vtPomocno').value = '';
-            document.getElementById('ntPomocno').value = '';
+            document.getElementById('vtMarija').value = '';
+            document.getElementById('ntMarija').value = '';
             osveziSve();
         }
 
-        function obrisiGlavno(index) {
-            podaciGlavno.splice(index, 1);
+        function sacuvajAleksu() {
+            const datum = document.getElementById('datumAleksa').value;
+            const vt = parseFloat(document.getElementById('vtAleksa').value) || 0;
+            const nt = parseFloat(document.getElementById('ntAleksa').value) || 0;
+
+            if(!datum) { alert('Unesite datum'); return; }
+
+            const iznos = izracunajIznos(vt, nt);
+            podaciAleksa.unshift({ datum, vt, nt, iznos });
+
+            document.getElementById('vtAleksa').value = '';
+            document.getElementById('ntAleksa').value = '';
             osveziSve();
         }
 
-        function obrisiPomocno(index) {
-            podaciPomocno.splice(index, 1);
-            osveziSve();
-        }
+        function obrisiGlavno(index) { podaciGlavno.splice(index, 1); osveziSve(); }
+        function obrisiMariju(index) { podaciMarija.splice(index, 1); osveziSve(); }
+        function obrisiAleksu(index) { podaciAleksa.splice(index, 1); osveziSve(); }
 
-        function prikaziGlavno() {
-            const tbody = document.getElementById('tabelaGlavno');
+        function prikaziTabelu(elementId, podaci, funkcijaBrisanja) {
+            const tbody = document.getElementById(elementId);
             tbody.innerHTML = '';
-            podaciGlavno.forEach((item, index) => {
+            podaci.forEach((item, index) => {
                 tbody.innerHTML += `
                     <tr>
                         <td>${item.datum}</td>
                         <td>${item.vt} / ${item.nt}</td>
                         <td><strong>${item.iznos.toFixed(2)} RSD</strong></td>
-                        <td><button class="btn-del" onclick="obrisiGlavno(${index})">X</button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function prikaziPomocno() {
-            const tbody = document.getElementById('tabelaPomocno');
-            tbody.innerHTML = '';
-            podaciPomocno.forEach((item, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${item.datum}</td>
-                        <td>${item.vt} / ${item.nt}</td>
-                        <td><strong>${item.iznos.toFixed(2)} RSD</strong></td>
-                        <td><button class="btn-del" onclick="obrisiPomocno(${index})">X</button></td>
+                        <td><button class="btn-del" onclick="${funkcijaBrisanja}(${index})">X</button></td>
                     </tr>
                 `;
             });
         }
 
         function izracunajReziju() {
-            if(podaciGlavno.length > 0 && podaciPomocno.length > 0) {
-                const zadnjeGlavno = podaciGlavno[0];
-                const zadnjePomocno = podaciPomocno[0];
-                
-                const kwhRazlika = (zadnjeGlavno.vt + zadnjeGlavno.nt) - (zadnjePomocno.vt + zadnjePomocno.nt);
-                const rsdRazlika = zadnjeGlavno.iznos - zadnjePomocno.iznos;
+            if(podaciGlavno.length > 0) {
+                const zGlavno = podaciGlavno[0];
+                const zMarija = podaciMarija.length > 0 ? podaciMarija[0] : { vt:0, nt:0, iznos:0 };
+                const zAleksa = podaciAleksa.length > 0 ? podaciAleksa[0] : { vt:0, nt:0, iznos:0 };
+
+                const kwhMarijaAleksa = (zMarija.vt + zMarija.nt) + (zAleksa.vt + zAleksa.nt);
+                const rsdMarijaAleksa = zMarija.iznos + zAleksa.iznos;
+
+                const kwhRazlika = (zGlavno.vt + zGlavno.nt) - kwhMarijaAleksa;
+                const rsdRazlika = zGlavno.iznos - rsdMarijaAleksa;
 
                 document.getElementById('rezijaKwh').innerText = (kwhRazlika > 0 ? kwhRazlika : 0) + ' kWh';
                 document.getElementById('rezijaRsd').innerText = (rsdRazlika > 0 ? rsdRazlika.toFixed(2) : '0.00') + ' RSD';
             }
         }
 
-        function iscrtajGrafikon() {
-            const ctx = document.getElementById('grafikonPoredjenja').getContext('2d');
-            
-            // Uzimamo datume sa glavnog brojila za X osu
+        function iscrtajGrafikone() {
+            // 1. Stubičasti grafikon
+            const ctxStub = document.getElementById('grafikonStub').getContext('2d');
             const datumi = podaciGlavno.map(p => p.datum).reverse();
+            
             const iznosiGlavno = podaciGlavno.map(p => p.iznos).reverse();
-            const iznosiPomocno = podaciPomocno.map(p => p.iznos).reverse();
+            const iznosiMarija = podaciMarija.map(p => p.iznos).reverse();
+            const iznosiAleksa = podaciAleksa.map(p => p.iznos).reverse();
 
-            if (mojGrafikon) {
-                mojGrafikon.destroy();
-            }
-
-            mojGrafikon = new Chart(ctx, {
+            if (chartStub) chartStub.destroy();
+            chartStub = new Chart(ctxStub, {
                 type: 'bar',
                 data: {
                     labels: datumi.length > 0 ? datumi : ['Nema podataka'],
                     datasets: [
-                        {
-                            label: 'Glavno Brojilo (RSD)',
-                            data: iznosiGlavno,
-                            backgroundColor: '#6b46c1'
-                        },
-                        {
-                            label: 'Pomoćno Brojilo (RSD)',
-                            data: iznosiPomocno,
-                            backgroundColor: '#319795'
-                        }
+                        { label: 'Glavno', data: iznosiGlavno, backgroundColor: '#6b46c1' },
+                        { label: 'Marija', data: iznosiMarija, backgroundColor: '#4f46e5' },
+                        { label: 'Aleksa', data: iznosiAleksa, backgroundColor: '#166534' }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    },
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // 2. Pita grafikon (Poslednje očitavanje)
+            const ctxPita = document.getElementById('grafikonPita').getContext('2d');
+            
+            let valMarija = podaciMarija.length > 0 ? podaciMarija[0].iznos : 0;
+            let valAleksa = podaciAleksa.length > 0 ? podaciAleksa[0].iznos : 0;
+            let valGlavno = podaciGlavno.length > 0 ? podaciGlavno[0].iznos : 0;
+            let valRezija = valGlavno - (valMarija + valAleksa);
+            if(valRezija < 0) valRezija = 0;
+
+            if (chartPita) chartPita.destroy();
+            chartPita = new Chart(ctxPita, {
+                type: 'pie',
+                data: {
+                    labels: ['Marija', 'Aleksa', 'Zajedničko / Režija'],
+                    datasets: [{
+                        data: [valMarija, valAleksa, valRezija],
+                        backgroundColor: ['#4f46e5', '#166534', '#6b46c1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
                 }
             });
         }
 
-        // Inicijalno osvežavanje pri otvaranju
+        // Inicijalno osvežavanje
         osveziSve();
     </script>
 </body>
