@@ -22,21 +22,23 @@
         .badge { background: #f1f5f9; color: #64748b; padding: 5px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; }
         
         label { display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 16px; margin-bottom: 12px; background: #f8fafc; }
+        .tarifa-title { font-size: 13px; font-weight: 800; color: #334155; margin-top: 10px; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        
+        input, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 15px; margin-bottom: 10px; background: #f8fafc; }
         input:focus { outline: none; border-color: #e83e8c; background: white; }
         
-        .row-2 { display: flex; gap: 10px; }
-        .row-2 > div { flex: 1; }
+        .row-3 { display: flex; gap: 8px; }
+        .row-3 > div { flex: 1; }
         
-        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 5px; margin-bottom: 15px; transition: opacity 0.2s; }
+        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; margin-bottom: 15px; transition: opacity 0.2s; }
         .btn:active { opacity: 0.85; }
         .btn-marija { background: #e83e8c; }
         .btn-aleksa { background: #28a745; }
         .btn-glavno { background: #6f42c1; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px 4px; text-align: center; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        th { color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        th, td { padding: 10px 4px; text-align: center; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        th { color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .btn-del { background: #dc3545; color: white; border: none; border-radius: 6px; width: 26px; height: 26px; font-weight: bold; cursor: pointer; }
 
         .rezija-box { border: 1.5px dashed #6f42c1; background: #f3f0ff; border-radius: 12px; padding: 12px; margin-top: 15px; }
@@ -62,11 +64,15 @@
         <label>Datum očitavanja:</label>
         <input type="date" id="datumMarija">
 
-        <label>VIŠA TARIFA (VT)</label>
-        <div class="row-2">
+        <div class="tarifa-title">VIŠA TARIFA (VT)</div>
+        <div class="row-3">
             <div>
-                <label>Novo stanje (kWh):</label>
-                <input type="number" id="vtMarija" placeholder="kWh">
+                <label>Prethodno:</label>
+                <input type="number" id="vtMarijaStaro" placeholder="kWh">
+            </div>
+            <div>
+                <label>Novo stanje:</label>
+                <input type="number" id="vtMarijaNovo" placeholder="kWh">
             </div>
             <div>
                 <label>Cena (RSD):</label>
@@ -74,11 +80,15 @@
             </div>
         </div>
 
-        <label>NIŽA TARIFA (NT)</label>
-        <div class="row-2">
+        <div class="tarifa-title">NIŽA TARIFA (NT)</div>
+        <div class="row-3">
             <div>
-                <label>Novo stanje (kWh):</label>
-                <input type="number" id="ntMarija" placeholder="kWh">
+                <label>Prethodno:</label>
+                <input type="number" id="ntMarijaStaro" placeholder="kWh">
+            </div>
+            <div>
+                <label>Novo stanje:</label>
+                <input type="number" id="ntMarijaNovo" placeholder="kWh">
             </div>
             <div>
                 <label>Cena (RSD):</label>
@@ -86,13 +96,13 @@
             </div>
         </div>
 
-        <button class="btn btn-marija" onclick="sacuvajMariju()">Sačuvaj za Mariju</button>
+        <button class="btn btn-marija" onclick="sacuvajMariju()">Izračunaj i sačuvaj za Mariju</button>
 
         <table>
             <thead>
                 <tr>
                     <th>Datum</th>
-                    <th>VT / NT</th>
+                    <th>Potrošeno</th>
                     <th>Iznos</th>
                     <th></th>
                 </tr>
@@ -111,11 +121,15 @@
         <label>Datum očitavanja:</label>
         <input type="date" id="datumAleksa">
 
-        <label>VIŠA TARIFA (VT)</label>
-        <div class="row-2">
+        <div class="tarifa-title">VIŠA TARIFA (VT)</div>
+        <div class="row-3">
             <div>
-                <label>Novo stanje (kWh):</label>
-                <input type="number" id="vtAleksa" placeholder="kWh">
+                <label>Prethodno:</label>
+                <input type="number" id="vtAleksaStaro" placeholder="kWh">
+            </div>
+            <div>
+                <label>Novo stanje:</label>
+                <input type="number" id="vtAleksaNovo" placeholder="kWh">
             </div>
             <div>
                 <label>Cena (RSD):</label>
@@ -123,11 +137,15 @@
             </div>
         </div>
 
-        <label>NIŽA TARIFA (NT)</label>
-        <div class="row-2">
+        <div class="tarifa-title">NIŽA TARIFA (NT)</div>
+        <div class="row-3">
             <div>
-                <label>Novo stanje (kWh):</label>
-                <input type="number" id="ntAleksa" placeholder="kWh">
+                <label>Prethodno:</label>
+                <input type="number" id="ntAleksaStaro" placeholder="kWh">
+            </div>
+            <div>
+                <label>Novo stanje:</label>
+                <input type="number" id="ntAleksaNovo" placeholder="kWh">
             </div>
             <div>
                 <label>Cena (RSD):</label>
@@ -135,13 +153,13 @@
             </div>
         </div>
 
-        <button class="btn btn-aleksa" onclick="sacuvajAleksu()">Sačuvaj za Aleksu</button>
+        <button class="btn btn-aleksa" onclick="sacuvajAleksu()">Izračunaj i sačuvaj za Aleksu</button>
 
         <table>
             <thead>
                 <tr>
                     <th>Datum</th>
-                    <th>VT / NT</th>
+                    <th>Potrošeno</th>
                     <th>Iznos</th>
                     <th></th>
                 </tr>
@@ -160,11 +178,15 @@
         <label>Datum očitavanja:</label>
         <input type="date" id="datumGlavno">
 
-        <label>VIŠA TARIFA (VT)</label>
-        <div class="row-2">
+        <div class="tarifa-title">VIŠA TARIFA (VT)</div>
+        <div class="row-3">
             <div>
-                <label>Novo stanje (kWh):</label>
-                <input type="number" id="vtGlavno" placeholder="kWh">
+                <label>Prethodno:</label>
+                <input type="number" id="vtGlavnoStaro" placeholder="kWh">
+            </div>
+            <div>
+                <label>Novo stanje:</label>
+                <input type="number" id="vtGlavnoNovo" placeholder="kWh">
             </div>
             <div>
                 <label>Cena (RSD):</label>
@@ -172,11 +194,15 @@
             </div>
         </div>
 
-        <label>NIŽA TARIFA (NT)</label>
-        <div class="row-2">
+        <div class="tarifa-title">NIŽA TARIFA (NT)</div>
+        <div class="row-3">
             <div>
-                <label>Novo stanje (kWh):</label>
-                <input type="number" id="ntGlavno" placeholder="kWh">
+                <label>Prethodno:</label>
+                <input type="number" id="ntGlavnoStaro" placeholder="kWh">
+            </div>
+            <div>
+                <label>Novo stanje:</label>
+                <input type="number" id="ntGlavnoNovo" placeholder="kWh">
             </div>
             <div>
                 <label>Cena (RSD):</label>
@@ -184,13 +210,13 @@
             </div>
         </div>
 
-        <button class="btn btn-glavno" onclick="sacuvajGlavno()">Sačuvaj Glavno Brojilo</button>
+        <button class="btn btn-glavno" onclick="sacuvajGlavno()">Izračunaj i sačuvaj Glavno Brojilo</button>
 
         <table>
             <thead>
                 <tr>
                     <th>Datum</th>
-                    <th>VT / NT</th>
+                    <th>Potrošeno</th>
                     <th>Iznos</th>
                     <th></th>
                 </tr>
@@ -227,7 +253,6 @@
     </div>
 
     <script>
-        // Postavljanje današnjeg datuma
         document.getElementById('datumMarija').valueAsDate = new Date();
         document.getElementById('datumAleksa').valueAsDate = new Date();
         document.getElementById('datumGlavno').valueAsDate = new Date();
@@ -248,55 +273,93 @@
             prikaziTabelu('tabelaAleksa', podaciAleksa, 'obrisiAleksu');
             prikaziTabelu('tabelaGlavno', podaciGlavno, 'obrisiGlavno');
 
+            popuniPrethodnoStanje();
             izracunajReziju();
             iscrtajGrafikone();
         }
 
+        // Automatski popunjava prethodno stanje na osnovu poslednjeg novog stanja
+        function popuniPrethodnoStanje() {
+            if(podaciMarija.length > 0) {
+                document.getElementById('vtMarijaStaro').value = podaciMarija[0].vtNovo;
+                document.getElementById('ntMarijaStaro').value = podaciMarija[0].ntNovo;
+            }
+            if(podaciAleksa.length > 0) {
+                document.getElementById('vtAleksaStaro').value = podaciAleksa[0].vtNovo;
+                document.getElementById('ntAleksaStaro').value = podaciAleksa[0].ntNovo;
+            }
+            if(podaciGlavno.length > 0) {
+                document.getElementById('vtGlavnoStaro').value = podaciGlavno[0].vtNovo;
+                document.getElementById('ntGlavnoStaro').value = podaciGlavno[0].ntNovo;
+            }
+        }
+
         function sacuvajMariju() {
             const datum = document.getElementById('datumMarija').value;
-            const vt = parseFloat(document.getElementById('vtMarija').value) || 0;
-            const nt = parseFloat(document.getElementById('ntMarija').value) || 0;
+            const vtStaro = parseFloat(document.getElementById('vtMarijaStaro').value) || 0;
+            const vtNovo = parseFloat(document.getElementById('vtMarijaNovo').value) || 0;
             const cVt = parseFloat(document.getElementById('cenaVtMarija').value) || 15.35;
+
+            const ntStaro = parseFloat(document.getElementById('ntMarijaStaro').value) || 0;
+            const ntNovo = parseFloat(document.getElementById('ntMarijaNovo').value) || 0;
             const cNt = parseFloat(document.getElementById('cenaNtMarija').value) || 3.84;
 
             if(!datum) { alert('Unesite datum'); return; }
-            const iznos = (vt * cVt) + (nt * cNt);
-            podaciMarija.unshift({ datum, vt, nt, iznos });
 
-            document.getElementById('vtMarija').value = '';
-            document.getElementById('ntMarija').value = '';
+            const vtKwh = Math.max(0, vtNovo - vtStaro);
+            const ntKwh = Math.max(0, ntNovo - ntStaro);
+            const iznos = (vtKwh * cVt) + (ntKwh * cNt);
+
+            podaciMarija.unshift({ datum, vtNovo, ntNovo, vtKwh, ntKwh, iznos });
+
+            document.getElementById('vtMarijaNovo').value = '';
+            document.getElementById('ntMarijaNovo').value = '';
             osveziSve();
         }
 
         function sacuvajAleksu() {
             const datum = document.getElementById('datumAleksa').value;
-            const vt = parseFloat(document.getElementById('vtAleksa').value) || 0;
-            const nt = parseFloat(document.getElementById('ntAleksa').value) || 0;
+            const vtStaro = parseFloat(document.getElementById('vtAleksaStaro').value) || 0;
+            const vtNovo = parseFloat(document.getElementById('vtAleksaNovo').value) || 0;
             const cVt = parseFloat(document.getElementById('cenaVtAleksa').value) || 15.35;
+
+            const ntStaro = parseFloat(document.getElementById('ntAleksaStaro').value) || 0;
+            const ntNovo = parseFloat(document.getElementById('ntAleksaNovo').value) || 0;
             const cNt = parseFloat(document.getElementById('cenaNtAleksa').value) || 3.84;
 
             if(!datum) { alert('Unesite datum'); return; }
-            const iznos = (vt * cVt) + (nt * cNt);
-            podaciAleksa.unshift({ datum, vt, nt, iznos });
 
-            document.getElementById('vtAleksa').value = '';
-            document.getElementById('ntAleksa').value = '';
+            const vtKwh = Math.max(0, vtNovo - vtStaro);
+            const ntKwh = Math.max(0, ntNovo - ntStaro);
+            const iznos = (vtKwh * cVt) + (ntKwh * cNt);
+
+            podaciAleksa.unshift({ datum, vtNovo, ntNovo, vtKwh, ntKwh, iznos });
+
+            document.getElementById('vtAleksaNovo').value = '';
+            document.getElementById('ntAleksaNovo').value = '';
             osveziSve();
         }
 
         function sacuvajGlavno() {
             const datum = document.getElementById('datumGlavno').value;
-            const vt = parseFloat(document.getElementById('vtGlavno').value) || 0;
-            const nt = parseFloat(document.getElementById('ntGlavno').value) || 0;
+            const vtStaro = parseFloat(document.getElementById('vtGlavnoStaro').value) || 0;
+            const vtNovo = parseFloat(document.getElementById('vtGlavnoNovo').value) || 0;
             const cVt = parseFloat(document.getElementById('cenaVtGlavno').value) || 15.35;
+
+            const ntStaro = parseFloat(document.getElementById('ntGlavnoStaro').value) || 0;
+            const ntNovo = parseFloat(document.getElementById('ntGlavnoNovo').value) || 0;
             const cNt = parseFloat(document.getElementById('cenaNtGlavno').value) || 3.84;
 
             if(!datum) { alert('Unesite datum'); return; }
-            const iznos = (vt * cVt) + (nt * cNt);
-            podaciGlavno.unshift({ datum, vt, nt, iznos });
 
-            document.getElementById('vtGlavno').value = '';
-            document.getElementById('ntGlavno').value = '';
+            const vtKwh = Math.max(0, vtNovo - vtStaro);
+            const ntKwh = Math.max(0, ntNovo - ntStaro);
+            const iznos = (vtKwh * cVt) + (ntKwh * cNt);
+
+            podaciGlavno.unshift({ datum, vtNovo, ntNovo, vtKwh, ntKwh, iznos });
+
+            document.getElementById('vtGlavnoNovo').value = '';
+            document.getElementById('ntGlavnoNovo').value = '';
             osveziSve();
         }
 
@@ -308,10 +371,11 @@
             const tbody = document.getElementById(elementId);
             tbody.innerHTML = '';
             podaci.forEach((item, index) => {
+                const ukKwh = item.vtKwh + item.ntKwh;
                 tbody.innerHTML += `
                     <tr>
                         <td>${item.datum}</td>
-                        <td>${item.vt} / ${item.nt}</td>
+                        <td>${ukKwh} kWh</td>
                         <td><strong>${item.iznos.toFixed(2)} RSD</strong></td>
                         <td><button class="btn-del" onclick="${funkcijaBrisanja}(${index})">X</button></td>
                     </tr>
@@ -322,13 +386,13 @@
         function izracunajReziju() {
             if(podaciGlavno.length > 0) {
                 const zGlavno = podaciGlavno[0];
-                const zMarija = podaciMarija.length > 0 ? podaciMarija[0] : { vt:0, nt:0, iznos:0 };
-                const zAleksa = podaciAleksa.length > 0 ? podaciAleksa[0] : { vt:0, nt:0, iznos:0 };
+                const zMarija = podaciMarija.length > 0 ? podaciMarija[0] : { vtKwh:0, ntKwh:0, iznos:0 };
+                const zAleksa = podaciAleksa.length > 0 ? podaciAleksa[0] : { vtKwh:0, ntKwh:0, iznos:0 };
 
-                const kwhMarijaAleksa = (zMarija.vt + zMarija.nt) + (zAleksa.vt + zAleksa.nt);
+                const kwhMarijaAleksa = (zMarija.vtKwh + zMarija.ntKwh) + (zAleksa.vtKwh + zAleksa.ntKwh);
                 const rsdMarijaAleksa = zMarija.iznos + zAleksa.iznos;
 
-                const kwhRazlika = (zGlavno.vt + zGlavno.nt) - kwhMarijaAleksa;
+                const kwhRazlika = (zGlavno.vtKwh + zGlavno.ntKwh) - kwhMarijaAleksa;
                 const rsdRazlika = zGlavno.iznos - rsdMarijaAleksa;
 
                 document.getElementById('rezijaKwh').innerText = (kwhRazlika > 0 ? kwhRazlika : 0) + ' kWh';
@@ -390,7 +454,6 @@
             });
         }
 
-        // Inicijalno učitavanje pri otvaranju
         osveziSve();
     </script>
 </body>
