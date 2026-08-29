@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidencija Struje - Apartmani & Glavno Brojilo</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; padding: 15px; background-color: #f0f2f5; margin: 0; }
+        h2 { text-align: center; color: #1a252f; margin-bottom: 20px; font-size: 24px; }
+        
+        /* Layout sa 3 kolone */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            border-top: 5px solid #007bff;
+        }
+
+        .card.marija { border-top-color: #e83e8c; }
+        .card.aleksa { border-top-color: #28a745; }
+        .card.glavno { border-top-color: #6f42c1; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-header h3 { margin: 0; color: #2c3e50; font-size: 18px; }
+        .badge {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        label { font-weight: bold; display: block; margin-top: 10px; font-size: 13px; color: #495057; }
+        input { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #ced4da; border-radius: 5px; font-size: 14px; }
+        input:focus { border-color: #80bdff; outline: none; }
+        
+        .row { display: flex; gap: 8px; }
+        .col { flex: 1; }
+        
+        .tarif-title {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button.btn-add {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .marija .btn-add { background-color: #e83e8c; }
+        .aleksa .btn-add { background-color: #28a745; }
+        .glavno .btn-add { background-color: #6f42c1; }
+
+        button.btn-add:hover { opacity: 0.9; }
+
+        .table-container { overflow-x: auto; margin-top: 15px; max-height: 250px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { border: 1px solid #dee2e6; padding: 6px 8px; text-align: center; }
+        th { background-color: #f8f9fa; color: #333; position: sticky; top: 0; }
+        
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .rezija-box {
+            background-color: #f8f9fa;
+            border: 1px dashed #6f42c1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        .rezija-title { font-weight: bold; color: #6f42c1; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>Evidencija Struje — Podbrojila & Glavno Brojilo</h2>
+
+    <div class="container">
+
+        <!-- APARTMAN MARIJA -->
+        <div class="card marija">
+            <div class="card-header">
+                <h3>Marija</h3>
+                <span class="badge">Podbrojilo 1</span>
+            </div>
+
+            <label for="datum-marija">Datum očitavanja:</label>
+            <input type="date" id="datum-marija">
+
+            <div class="tarif-title">Viša Tarifa (VT)</div>
+            <div class="row">
+                <div class="col"><label>Novo stanje (kWh):</label><input type="number" id="stanjeVT-marija" placeholder="kWh"></div>
+                <div class="col"><label>Cena (RSD):</label><input type="number" id="cenaVT-marija" value="15.35" step="0.01"></div>
+            </div>
+
+            <div class="tarif-title">Niža Tarifa (NT)</div>
+            <div class="row">
+                <div class="col"><label>Novo stanje (kWh):</label><input type="number" id="stanjeNT-marija" placeholder="kWh"></div>
+                <div class="col"><label>Cena (RSD):</label><input type="number" id="cenaNT-marija" value="3.84" step="0.01"></div>
+            </div>
+
+            <button class="btn-add" onclick="dodajUnos('Marija')">Sačuvaj za Mariju</button>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>VT / NT</th>
+                            <th>Iznos</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-marija"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- APARTMAN ALEKSA -->
+        <div class="card aleksa">
+            <div class="card-header">
+                <h3>Aleksa</h3>
+                <span class="badge">Podbrojilo 2</span>
+            </div>
+
+            <label for="datum-aleksa">Datum očitavanja:</label>
+            <input type="date" id="datum-aleksa">
+
+            <div class="tarif-title">Viša Tarifa (VT)</div>
+            <div class="row">
+                <div class="col"><label>Novo stanje (kWh):</label><input type="number" id="stanjeVT-aleksa" placeholder="kWh"></div>
+                <div class="col"><label>Cena (RSD):</label><input type="number" id="cenaVT-aleksa" value="15.35" step="0.01"></div>
+            </div>
+
+            <div class="tarif-title">Niža Tarifa (NT)</div>
+            <div class="row">
+                <div class="col"><label>Novo stanje (kWh):</label><input type="number" id="stanjeNT-aleksa" placeholder="kWh"></div>
+                <div class="col"><label>Cena (RSD):</label><input type="number" id="cenaNT-aleksa" value="3.84" step="0.01"></div>
+            </div>
+
+            <button class="btn-add" onclick="dodajUnos('Aleksa')">Sačuvaj za Aleksu</button>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>VT / NT</th>
+                            <th>Iznos</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-aleksa"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- GLAVNO BROJILO -->
+        <div class="card glavno">
+            <div class="card-header">
+                <h3>Glavno Brojilo</h3>
+                <span class="badge">EPS Sat</span>
+            </div>
+
+            <label for="datum-glavno">Datum očitavanja:</label>
+            <input type="date" id="datum-glavno">
+
+            <div class="tarif-title">Viša Tarifa (VT)</div>
+            <div class="row">
+                <div class="col"><label>Novo stanje (kWh):</label><input type="number" id="stanjeVT-glavno" placeholder="kWh"></div>
+                <div class="col"><label>Cena (RSD):</label><input type="number" id="cenaVT-glavno" value="15.35" step="0.01"></div>
+            </div>
+
+            <div class="tarif-title">Niža Tarifa (NT)</div>
+            <div class="row">
+                <div class="col"><label>Novo stanje (kWh):</label><input type="number" id="stanjeNT-glavno" placeholder="kWh"></div>
+                <div class="col"><label>Cena (RSD):</label><input type="number" id="cenaNT-glavno" value="3.84" step="0.01"></div>
+            </div>
+
+            <button class="btn-add" onclick="dodajUnos('Glavno')">Sačuvaj Glavno Brojilo</button>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>VT / NT</th>
+                            <th>Iznos</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-glavno"></tbody>
+                </table>
+            </div>
+
+            <div class="rezija-box" id="rezija-info">
+                <div class="rezija-title">Zajednička potrošnja / Režija</div>
+                <div>Zadnja razlika: <b id="razlika-kwh">0 kWh</b></div>
+                <div>Iznos razlike: <b id="razlika-rsd" style="color: #28a745;">0.00 RSD</b></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const danas = new Date().toISOString().split('T')[0];
+        document.getElementById('datum-marija').value = danas;
+        document.getElementById('datum-aleksa').value = danas;
+        document.getElementById('datum-glavno').value = danas;
+
+        function idNaziv(ime) {
+            return ime.toLowerCase();
+        }
+
+        function ucitajPodatke() {
+            const podaci = JSON.parse(localStorage.getItem('potrosnjaStruje3Brojila')) || [];
+            
+            ['Marija', 'Aleksa', 'Glavno'].forEach(mesto => {
+                const key = idNaziv(mesto);
+                const tbody = document.getElementById(`tabela-${key}`);
+                tbody.innerHTML = '';
+
+                const filtrirano = podaci.filter(p => p.mesto === mesto);
+
+                filtrirano.forEach((item, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.datum}</td>
+                        <td>${item.potrosenoVT} / ${item.potrosenoNT}</td>
+                        <td><b>${item.iznos} RSD</b></td>
+                        <td><button class="delete-btn" onclick="obrisiUnos('${mesto}', ${index})">X</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+
+            proracunRazlike();
+        }
+
+        function dodajUnos(mesto) {
+            const key = idNaziv(mesto);
+            const datum = document.getElementById(`datum-${key}`).value;
+            const stanjeVT = parseFloat(document.getElementById(`stanjeVT-${key}`).value);
+            const cenaVT = parseFloat(document.getElementById(`cenaVT-${key}`).value);
+            const stanjeNT = parseFloat(document.getElementById(`stanjeNT-${key}`).value);
+            const cenaNT = parseFloat(document.getElementById(`cenaNT-${key}`).value);
+
+            if (isNaN(stanjeVT) || isNaN(stanjeNT)) {
+                alert('Molimo unesite obostrana stanja (VT i NT).');
+                return;
+            }
+
+            const podaci = JSON.parse(localStorage.getItem('potrosnjaStruje3Brojila')) || [];
+            const prethodni = podaci.filter(p => p.mesto === mesto);
+
+            let potrosenoVT = 0;
+            let potrosenoNT = 0;
+
+            if (prethodni.length > 0) {
+                potrosenoVT = stanjeVT - prethodni[0].stanjeVT;
+                potrosenoNT = stanjeNT - prethodni[0].stanjeNT;
+            }
+
+            if (potrosenoVT < 0) potrosenoVT = 0;
+            if (potrosenoNT < 0) potrosenoNT = 0;
+
+            const ukupnoKwh = potrosenoVT + potrosenoNT;
+            const iznos = ((potrosenoVT * cenaVT) + (potrosenoNT * cenaNT)).toFixed(2);
+
+            const noviUnos = {
+                mesto,
+                datum,
+                stanjeVT,
+                stanjeNT,
+                potrosenoVT,
+                potrosenoNT,
+                ukupnoKwh,
+                iznos,
+                timestamp: new Date().getTime()
+            };
+
+            podaci.unshift(noviUnos);
+            localStorage.setItem('potrosnjaStruje3Brojila', JSON.stringify(podaci));
+
+            document.getElementById(`stanjeVT-${key}`).value = '';
+            document.getElementById(`stanjeNT-${key}`).value = '';
+
+            ucitajPodatke();
+        }
+
+        function obrisiUnos(mesto, indexZaMesto) {
+            if (confirm(`Obriši očitavanje za ${mesto}?`)) {
+                let podaci = JSON.parse(localStorage.getItem('potrosnjaStruje3Brojila')) || [];
+                
+                let brojac = 0;
+                let globalniIndex = -1;
+                for (let i = 0; i < podaci.length; i++) {
+                    if (podaci[i].mesto === mesto) {
+                        if (brojac === indexZaMesto) {
+                            globalniIndex = i;
+                            break;
+                        }
+                        brojac++;
+                    }
+                }
+
+                if (globalniIndex !== -1) {
+                    podaci.splice(globalniIndex, 1);
+                    localStorage.setItem('potrosnjaStruje3Brojila', JSON.stringify(podaci));
+                    ucitajPodatke();
+                }
+            }
+        }
+
+        function proracunRazlike() {
+            const podaci = JSON.parse(localStorage.getItem('potrosnjaStruje3Brojila')) || [];
+            
+            const zadnjaMarija = podaci.find(p => p.mesto === 'Marija');
+            const zadnjiAleksa = podaci.find(p => p.mesto === 'Aleksa');
+            const zadnjeGlavno = podaci.find(p => p.mesto === 'Glavno');
+
+            if (zadnjaMarija && zadnjiAleksa && zadnjeGlavno) {
+                const ukupnoPodbrojilaKwh = zadnjaMarija.ukupnoKwh + zadnjiAleksa.ukupnoKwh;
+                const razlikaKwh = zadnjeGlavno.ukupnoKwh - ukupnoPodbrojilaKwh;
+                
+                const ukupnoPodbrojilaRsd = parseFloat(zadnjaMarija.iznos) + parseFloat(zadnjiAleksa.iznos);
+                const razlikaRsd = (parseFloat(zadnjeGlavno.iznos) - ukupnoPodbrojilaRsd).toFixed(2);
+
+                document.getElementById('razlika-kwh').innerText = `${razlikaKwh > 0 ? razlikaKwh : 0} kWh`;
+                document.getElementById('razlika-rsd').innerText = `${razlikaRsd > 0 ? razlikaRsd : '0.00'} RSD`;
+            } else {
+                document.getElementById('razlika-kwh').innerText = `Unesite stanja za sva 3`;
+                document.getElementById('razlika-rsd').innerText = `0.00 RSD`;
+            }
+        }
+
+        ucitajPodatke();
+    </script>
+</body>
+</html>
