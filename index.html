@@ -3,230 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Struje sa Grafikonom</title>
+    <title>Kalkulator Struje - EPS Sat</title>
     <!-- Chart.js biblioteka za grafikone -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 12px; background: #eef2f5; max-width: 650px; margin: auto; color: #333; }
-        h2, h3 { text-align: center; color: #1a365d; margin-top: 5px; }
-        .card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
-        label { font-size: 0.9em; font-weight: bold; color: #4a5568; display: block; margin-top: 8px; }
-        input, select, button { width: 100%; padding: 10px; margin: 4px 0 10px 0; border-radius: 6px; border: 1px solid #cbd5e0; font-size: 14px; }
-        input:focus, select:focus { outline: none; border-color: #3182ce; box-shadow: 0 0 0 2px rgba(49,130,206,0.2); }
-        button { background: #3182ce; color: white; font-weight: bold; border: none; cursor: pointer; transition: background 0.2s; }
-        button:hover { background: #2b6cb0; }
-        .btn-danger { background: #e53e3e; }
-        .btn-danger:hover { background: #c53030; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
-        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
-        th { background: #f7fafc; color: #2d3748; }
-        .chart-box { width: 100%; margin: 15px 0; }
-        .chart-pita { max-width: 320px; margin: 0 auto; }
-        .total-box { background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; color: #2b6cb0; font-size: 1.1em; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f0f2f5; margin: 0; padding: 10px; color: #333; }
+        .card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-title { font-size: 20px; font-weight: 700; color: #2d3748; margin: 0; }
+        .badge { background: #edf2f7; color: #4a5568; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+        label { display: block; font-size: 11px; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 16px; margin-bottom: 12px; background: #f8fafc; }
+        input:focus { outline: none; border-color: #6b46c1; background: white; }
+        .row-2 { display: flex; gap: 10px; }
+        .row-2 > div { flex: 1; }
+        .btn-purple { width: 100%; padding: 14px; background: #6b46c1; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 5px; margin-bottom: 15px; }
+        .btn-purple:active { background: #553c9a; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px 4px; text-align: center; border-bottom: 1px solid #edf2f7; font-size: 14px; }
+        th { color: #718096; font-size: 12px; }
+        .btn-del { background: #e53e3e; color: white; border: none; border-radius: 6px; width: 26px; height: 26px; font-weight: bold; cursor: pointer; }
+        .rezija-box { border: 1.5px dashed #6b46c1; background: #faf5ff; border-radius: 12px; padding: 12px; margin-top: 15px; }
+        .rezija-title { color: #553c9a; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+        .rezija-text { font-size: 13px; color: #4a5568; margin: 2px 0; }
+        .rezija-text strong { color: #2f855a; }
+        .chart-container { width: 100%; height: 220px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <h2>Kalkulator Struje</h2>
-
+    <!-- Glavno Brojilo -->
     <div class="card">
-        <h3>Unos novog računa / Člana</h3>
-        <label for="korisnik">Ime / Član (npr. Sprat 1, Stan 2)</label>
-        <input type="text" id="korisnik" placeholder="Unesite ime ili prostoriju">
+        <div class="card-header">
+            <h2 class="card-title">Glavno Brojilo</h2>
+            <span class="badge">EPS Sat</span>
+        </div>
 
-        <div class="grid-2">
+        <label>Datum očitavanja:</label>
+        <input type="date" id="datumGlavno">
+
+        <label>VIŠA TARIFA (VT)</label>
+        <div class="row-2">
             <div>
-                <label for="potrosnjaVT">Viša tarifa (VT - kWh)</label>
-                <input type="number" id="potrosnjaVT" placeholder="0" value="0">
+                <label>Novo stanje (kWh):</label>
+                <input type="number" id="vtGlavno" placeholder="kWh">
             </div>
             <div>
-                <label for="potrosnjaMT">Niža tarifa (MT - kWh)</label>
-                <input type="number" id="potrosnjaMT" placeholder="0" value="0">
+                <label>Cena (RSD):</label>
+                <input type="number" id="cenaVt" value="15.35" step="0.01">
             </div>
         </div>
 
-        <label for="iznosRSD">Ili unesite direktan iznos (RSD)</label>
-        <input type="number" id="iznosRSD" placeholder="Ako znate tačan iznos u dinarima">
-
-        <button onclick="dodajStavku()">Dodaj u obračun</button>
-    </div>
-
-    <!-- Stubičasti grafikon -->
-    <div class="card">
-        <h3>Poređenje potrošnje (kWh / RSD)</h3>
-        <div class="chart-box">
-            <canvas id="stubicastiGrafikon"></canvas>
+        <label>NIŽA TARIFA (NT)</label>
+        <div class="row-2">
+            <div>
+                <label>Novo stanje (kWh):</label>
+                <input type="number" id="ntGlavno" placeholder="kWh">
+            </div>
+            <div>
+                <label>Cena (RSD):</label>
+                <input type="number" id="cenaNt" value="3.84" step="0.01">
+            </div>
         </div>
-    </div>
 
-    <!-- Pita grafikon -->
-    <div class="card">
-        <h3>Procenat učešća u računu</h3>
-        <div class="chart-box chart-pita">
-            <canvas id="pitaGrafikon"></canvas>
-        </div>
-    </div>
+        <button class="btn-purple" onclick="sacuvajGlavno()">Sačuvaj Glavno Brojilo</button>
 
-    <div class="card">
-        <h3>Pregled unetih stavki</h3>
         <table>
             <thead>
                 <tr>
-                    <th>Član</th>
-                    <th>VT (kWh)</th>
-                    <th>MT (kWh)</th>
-                    <th>Iznos (RSD)</th>
-                    <th>Akcija</th>
+                    <th>Datum</th>
+                    <th>VT / NT</th>
+                    <th>Iznos</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody id="tabela-podaci"></tbody>
+            <tbody id="tabelaGlavno"></tbody>
         </table>
 
-        <div class="total-box" style="margin-top: 15px;" id="ukupno-prikaz">
-            Ukupno za uplatu: 0 RSD
+        <div class="rezija-box">
+            <div class="rezija-title">Zajednička potrošnja / Režija</div>
+            <div class="rezija-text">Zadnja razlika: <strong id="rezijaKwh">0 kWh</strong></div>
+            <div class="rezija-text">Iznos razlike: <strong id="rezijaRsd">0.00 RSD</strong></div>
+        </div>
+    </div>
+
+    <!-- Pomoćno Brojilo -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Pomoćno Brojilo</h2>
+            <span class="badge">Lokalno</span>
         </div>
 
-        <button onclick="obrisiSve()" class="btn-danger" style="margin-top: 15px;">Obriši sve podatke</button>
+        <label>Datum očitavanja:</label>
+        <input type="date" id="datumPomocno">
+
+        <div class="row-2">
+            <div>
+                <label>VT STANJE (kWh):</label>
+                <input type="number" id="vtPomocno" placeholder="kWh">
+            </div>
+            <div>
+                <label>NT STANJE (kWh):</label>
+                <input type="number" id="ntPomocno" placeholder="kWh">
+            </div>
+        </div>
+
+        <button class="btn-purple" onclick="sacuvajPomocno()">Sačuvaj Pomoćno Brojilo</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>VT / NT</th>
+                    <th>Iznos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tabelaPomocno"></tbody>
+        </table>
+    </div>
+
+    <!-- DODATAK: Grafikon na samom dnu -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Grafikon potrošnje</h2>
+            <span class="badge">Pregled</span>
+        </div>
+        <div class="chart-container">
+            <canvas id="grafikonPoredjenja"></canvas>
+        </div>
     </div>
 
     <script>
-        // Učitavanje iz lokalne memorije
-        let podaci = JSON.parse(localStorage.getItem('podaciStruja')) || [];
-        let grafikonPita = null;
-        let grafikonStub = null;
+        // Postavi današnji datum po defaultu
+        document.getElementById('datumGlavno').valueAsDate = new Date();
+        document.getElementById('datumPomocno').valueAsDate = new Date();
 
-        function sacuvajIosvezi() {
-            localStorage.setItem('podaciStruja', JSON.stringify(podaci));
-            prikaziTabelu();
-            nacrtajGrafikone();
+        let podaciGlavno = JSON.parse(localStorage.getItem('podaciGlavno')) || [];
+        let podaciPomocno = JSON.parse(localStorage.getItem('podaciPomocno')) || [];
+        let mojGrafikon = null;
+
+        function osveziSve() {
+            localStorage.setItem('podaciGlavno', JSON.stringify(podaciGlavno));
+            localStorage.setItem('podaciPomocno', JSON.stringify(podaciPomocno));
+            prikaziGlavno();
+            prikaziPomocno();
+            izracunajReziju();
+            iscrtajGrafikon();
         }
 
-        function dodajStavku() {
-            const korisnik = document.getElementById('korisnik').value.trim();
-            const vt = parseFloat(document.getElementById('potrosnjaVT').value) || 0;
-            const mt = parseFloat(document.getElementById('potrosnjaMT').value) || 0;
-            let rsd = parseFloat(document.getElementById('iznosRSD').value) || 0;
+        function sacuvajGlavno() {
+            const datum = document.getElementById('datumGlavno').value;
+            const vt = parseFloat(document.getElementById('vtGlavno').value) || 0;
+            const nt = parseFloat(document.getElementById('ntGlavno').value) || 0;
+            const cenaVt = parseFloat(document.getElementById('cenaVt').value) || 15.35;
+            const cenaNt = parseFloat(document.getElementById('cenaNt').value) || 3.84;
 
-            if (!korisnik) {
-                alert('Molimo unesite ime ili naziv člana.');
-                return;
-            }
+            if(!datum) { alert('Unesite datum'); return; }
 
-            if (vt === 0 && mt === 0 && rsd === 0) {
-                alert('Unesite potrošnju u kWh ili iznos u dinarima.');
-                return;
-            }
-
-            // Ako iznos u RSD nije ručno unet, izračunaj okvirno po kWh (prosečna cena sa taksama ~10 RSD/kWh)
-            if (rsd === 0 && (vt > 0 || mt > 0)) {
-                rsd = Math.round((vt * 12) + (mt * 4)); // Prosta procena VT/MT
-            }
-
-            podaci.push({ korisnik, vt, mt, rsd });
+            const iznos = (vt * cenaVt) + (nt * cenaNt);
+            podaciGlavno.unshift({ datum, vt, nt, iznos });
             
-            // Resetuj polja
-            document.getElementById('korisnik').value = '';
-            document.getElementById('potrosnjaVT').value = '0';
-            document.getElementById('potrosnjaMT').value = '0';
-            document.getElementById('iznosRSD').value = '';
-
-            sacuvajIosvezi();
+            document.getElementById('vtGlavno').value = '';
+            document.getElementById('ntGlavno').value = '';
+            osveziSve();
         }
 
-        function obrisiStavku(index) {
-            podaci.splice(index, 1);
-            sacuvajIosvezi();
+        function sacuvajPomocno() {
+            const datum = document.getElementById('datumPomocno').value;
+            const vt = parseFloat(document.getElementById('vtPomocno').value) || 0;
+            const nt = parseFloat(document.getElementById('ntPomocno').value) || 0;
+            const cenaVt = parseFloat(document.getElementById('cenaVt').value) || 15.35;
+            const cenaNt = parseFloat(document.getElementById('cenaNt').value) || 3.84;
+
+            if(!datum) { alert('Unesite datum'); return; }
+
+            const iznos = (vt * cenaVt) + (nt * cenaNt);
+            podaciPomocno.unshift({ datum, vt, nt, iznos });
+
+            document.getElementById('vtPomocno').value = '';
+            document.getElementById('ntPomocno').value = '';
+            osveziSve();
         }
 
-        function obrisiSve() {
-            if (confirm('Da li ste sigurni da želite da obrišete sve unete podatke?')) {
-                podaci = [];
-                sacuvajIosvezi();
-            }
+        function obrisiGlavno(index) {
+            podaciGlavno.splice(index, 1);
+            osveziSve();
         }
 
-        function prikaziTabelu() {
-            const tbody = document.getElementById('tabela-podaci');
+        function obrisiPomocno(index) {
+            podaciPomocno.splice(index, 1);
+            osveziSve();
+        }
+
+        function prikaziGlavno() {
+            const tbody = document.getElementById('tabelaGlavno');
             tbody.innerHTML = '';
-            let ukupnoRsd = 0;
-
-            podaci.forEach((item, index) => {
-                ukupnoRsd += item.rsd;
+            podaciGlavno.forEach((item, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td><b>${item.korisnik}</b></td>
-                        <td>${item.vt}</td>
-                        <td>${item.mt}</td>
-                        <td>${item.rsd.toLocaleString('sr-RS')} RSD</td>
-                        <td><button onclick="obrisiStavku(${index})" class="btn-danger" style="padding: 4px 8px; margin:0; width:auto;">X</button></td>
+                        <td>${item.datum}</td>
+                        <td>${item.vt} / ${item.nt}</td>
+                        <td><strong>${item.iznos.toFixed(2)} RSD</strong></td>
+                        <td><button class="btn-del" onclick="obrisiGlavno(${index})">X</button></td>
                     </tr>
                 `;
             });
-
-            document.getElementById('ukupno-prikaz').innerText = 'Ukupno za uplatu: ' + ukupnoRsd.toLocaleString('sr-RS') + ' RSD';
         }
 
-        function nacrtajGrafikone() {
-            const imena = [];
-            const iznosi = [];
-
-            // Grupisanje po članovima
-            podaci.forEach(item => {
-                const index = imena.indexOf(item.korisnik);
-                if (index > -1) {
-                    iznosi[index] += item.rsd;
-                } else {
-                    imena.push(item.korisnik);
-                    iznosi.push(item.rsd);
-                }
+        function prikaziPomocno() {
+            const tbody = document.getElementById('tabelaPomocno');
+            tbody.innerHTML = '';
+            podaciPomocno.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.datum}</td>
+                        <td>${item.vt} / ${item.nt}</td>
+                        <td><strong>${item.iznos.toFixed(2)} RSD</strong></td>
+                        <td><button class="btn-del" onclick="obrisiPomocno(${index})">X</button></td>
+                    </tr>
+                `;
             });
+        }
 
-            const boje = ['#3182ce', '#e53e3e', '#dd6b20', '#38a169', '#805ad5', '#d69e2e', '#319795'];
+        function izracunajReziju() {
+            if(podaciGlavno.length > 0 && podaciPomocno.length > 0) {
+                const zadnjeGlavno = podaciGlavno[0];
+                const zadnjePomocno = podaciPomocno[0];
+                
+                const kwhRazlika = (zadnjeGlavno.vt + zadnjeGlavno.nt) - (zadnjePomocno.vt + zadnjePomocno.nt);
+                const rsdRazlika = zadnjeGlavno.iznos - zadnjePomocno.iznos;
 
-            // 1. Stubičasti Grafikon
-            const ctxStub = document.getElementById('stubicastiGrafikon').getContext('2d');
-            if (grafikonStub) grafikonStub.destroy();
-            grafikonStub = new Chart(ctxStub, {
+                document.getElementById('rezijaKwh').innerText = (kwhRazlika > 0 ? kwhRazlika : 0) + ' kWh';
+                document.getElementById('rezijaRsd').innerText = (rsdRazlika > 0 ? rsdRazlika.toFixed(2) : '0.00') + ' RSD';
+            }
+        }
+
+        function iscrtajGrafikon() {
+            const ctx = document.getElementById('grafikonPoredjenja').getContext('2d');
+            
+            // Uzimamo datume sa glavnog brojila za X osu
+            const datumi = podaciGlavno.map(p => p.datum).reverse();
+            const iznosiGlavno = podaciGlavno.map(p => p.iznos).reverse();
+            const iznosiPomocno = podaciPomocno.map(p => p.iznos).reverse();
+
+            if (mojGrafikon) {
+                mojGrafikon.destroy();
+            }
+
+            mojGrafikon = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: imena,
-                    datasets: [{
-                        label: 'Iznos (RSD)',
-                        data: iznosi,
-                        backgroundColor: boje.slice(0, imena.length)
-                    }]
+                    labels: datumi.length > 0 ? datumi : ['Nema podataka'],
+                    datasets: [
+                        {
+                            label: 'Glavno Brojilo (RSD)',
+                            data: iznosiGlavno,
+                            backgroundColor: '#6b46c1'
+                        },
+                        {
+                            label: 'Pomoćno Brojilo (RSD)',
+                            data: iznosiPomocno,
+                            backgroundColor: '#319795'
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            // 2. Pita Grafikon
-            const ctxPita = document.getElementById('pitaGrafikon').getContext('2d');
-            if (grafikonPita) grafikonPita.destroy();
-            grafikonPita = new Chart(ctxPita, {
-                type: 'pie',
-                data: {
-                    labels: imena,
-                    datasets: [{
-                        data: iznosi,
-                        backgroundColor: boje.slice(0, imena.length)
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } }
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
                 }
             });
         }
 
-        // Inicijalno učitavanje pri otvaranju
-        prikaziTabelu();
-        nacrtajGrafikone();
+        // Inicijalno osvežavanje pri otvaranju
+        osveziSve();
     </script>
 </body>
 </html>
