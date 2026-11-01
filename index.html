@@ -415,5 +415,129 @@
 
         osveziSve();
     </script>
+    <!-- DODATAK: IZVOZ I UVOZ PODATAKA
+     Ubaciti ceo ovaj blok neposredno pre završnog </body> taga u index.html. -->
+
+<style>
+  .backup-card {
+    background: white;
+    border-radius: 20px;
+    padding: 18px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    border-top: 5px solid #0d9488;
+  }
+  .backup-card h2 {
+    font-size: 20px; color: #1e293b; margin: 0 0 10px;
+  }
+  .backup-card p { color: #64748b; font-size: 13px; line-height: 1.5; }
+  .backup-btn {
+    display:block; width:100%; padding:14px; margin:10px 0;
+    border:0; border-radius:12px; color:white; font-size:16px;
+    font-weight:700; cursor:pointer;
+  }
+  .backup-export { background:#0d9488; }
+  .backup-import { background:#2563eb; }
+  #backupFile { display:none; }
+</style>
+
+<div class="backup-card">
+  <h2>Čuvanje podataka</h2>
+  <p>Izvezite sve unose Marije, Alekse i Glavnog brojila u rezervnu datoteku. Na drugom telefonu izaberite tu datoteku da vratite podatke.</p>
+  <button type="button" class="backup-btn backup-export" onclick="izveziPodatkeStruje()">
+    Izvezi podatke
+  </button>
+  <button type="button" class="backup-btn backup-import" onclick="document.getElementById('backupFile').click()">
+    Uvezi podatke
+  </button>
+  <input type="file" id="backupFile" accept=".json,application/json">
+</div>
+
+<script>
+(function () {
+  const KLJUCEVI = ['podaciMarija', 'podaciAleksa', 'podaciGlavno'];
+
+  window.izveziPodatkeStruje = function () {
+    try {
+      const rezervnaKopija = {
+        aplikacija: 'Evidencija Struje',
+        verzija: 1,
+        datumIzvoza: new Date().toISOString(),
+        podaciMarija: JSON.parse(localStorage.getItem('podaciMarija') || '[]'),
+        podaciAleksa: JSON.parse(localStorage.getItem('podaciAleksa') || '[]'),
+        podaciGlavno: JSON.parse(localStorage.getItem('podaciGlavno') || '[]')
+      };
+
+      const blob = new Blob(
+        [JSON.stringify(rezervnaKopija, null, 2)],
+        { type: 'application/json;charset=utf-8' }
+      );
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'rezervna-kopija-struja-' +
+        new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      alert('Rezervna kopija je pripremljena. Proverite da li je datoteka preuzeta.');
+    } catch (e) {
+      alert('Izvoz nije uspeo: ' + e.message);
+    }
+  };
+
+  document.getElementById('backupFile').addEventListener('change', function (event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      try {
+        const data = JSON.parse(reader.result);
+        const isValid = data &&
+          Array.isArray(data.podaciMarija) &&
+          Array.isArray(data.podaciAleksa) &&
+          Array.isArray(data.podaciGlavno);
+
+        if (!isValid) {
+          alert('Ova datoteka nije ispravna rezervna kopija aplikacije Struja.');
+          return;
+        }
+
+        const potvrda = confirm(
+          'Uvoz će zameniti postojeće podatke na ovom telefonu za Mariju, Aleksu i Glavno brojilo. ' +
+          'Pre nastavka napravite izvoz postojećih podataka. Da li želite da nastavite?'
+        );
+        if (!potvrda) return;
+
+        // Pre zamene sačuvaj trenutno stanje kao dodatnu zaštitu.
+        const prethodno = {};
+        KLJUCEVI.forEach(k => prethodno[k] = localStorage.getItem(k));
+
+        try {
+          localStorage.setItem('podaciMarija', JSON.stringify(data.podaciMarija));
+          localStorage.setItem('podaciAleksa', JSON.stringify(data.podaciAleksa));
+          localStorage.setItem('podaciGlavno', JSON.stringify(data.podaciGlavno));
+        } catch (writeError) {
+          KLJUCEVI.forEach(k => {
+            if (prethodno[k] === null) localStorage.removeItem(k);
+            else localStorage.setItem(k, prethodno[k]);
+          });
+          throw writeError;
+        }
+
+        alert('Podaci su uspešno uvezeni. Aplikacija će se sada osvežiti.');
+        location.reload();
+      } catch (e) {
+        alert('Uvoz nije uspeo: ' + e.message);
+      } finally {
+        event.target.value = '';
+      }
+    };
+    reader.readAsText(file);
+  });
+})();
+</script>
 </body>
 </html>
